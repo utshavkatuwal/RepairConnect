@@ -1,0 +1,23 @@
+# RepairConnect — SPA fallback + security
+# Place this file in the domain root (public_html) next to index.html
+
+# Protect sensitive files from being served
+<FilesMatch "(^\.|idpass\.txt|\.sql$|\.log$|\.env*)">
+    Require all denied
+</FilesMatch>
+
+# Disable directory listing
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Allow existing files and directories (assets, api, favicon, etc.)
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Route everything else to index.html for react-router deep links
+    RewriteRule ^ index.html [L]
+</IfModule>
